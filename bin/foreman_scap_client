@@ -89,8 +89,7 @@ load_config () {
     }
 
     /^([0-9]+)\s*:/ {
-      sub(/\s*:/, "");
-      current_policy_id=$1;
+      current_policy_id=gensub(/^.*([0-9]+).*$/, "\\1", 1);
       if (current_policy_id == policy_id) { policy_found="true"; }
     }
     /^  :profile\s*:/ {
