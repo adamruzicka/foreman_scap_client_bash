@@ -193,17 +193,59 @@ else
 fi
 
 echo
+echo "Testing policy 3 configuration..."
+
+# Test policy 3
+export POLICY_ID="3"
+if load_config "$TEST_CONFIG"; then
+    echo "✓ Policy 3 config loaded successfully"
+
+    # Test policy 3 profile
+    expected="xccdf_org.ssgproject.content_profile_cis_server_l1"
+    actual="$POLICY_PROFILE"
+    [ "$actual" = "$expected" ] && result="PASS" || result="FAIL"
+    print_test_result "Policy 3 profile parsing" "$expected" "$actual" "$result"
+
+    # Test policy 3 content path
+    expected="/var/lib/openscap/content/aa31f089ebb601930c023d3153ee433eca0af17dec0ea0787d54f959ea18680e.xml"
+    actual="$POLICY_CONTENT_PATH"
+    [ "$actual" = "$expected" ] && result="PASS" || result="FAIL"
+    print_test_result "Policy 3 content path parsing" "$expected" "$actual" "$result"
+
+    # Test policy 3 download path
+    expected="/compliance/policies/1/content/aa31f089ebb601930c023d3153ee433eca0af17dec0ea0787d54f959ea18680e"
+    actual="$POLICY_DOWNLOAD_PATH"
+    [ "$actual" = "$expected" ] && result="PASS" || result="FAIL"
+    print_test_result "Policy 3 download path parsing" "$expected" "$actual" "$result"
+
+    # Test policy 3 tailoring path (empty)
+    expected=""
+    actual="$POLICY_TAILORING_PATH"
+    [ "$actual" = "$expected" ] && result="PASS" || result="FAIL"
+    print_test_result "Policy 3 tailoring path parsing (empty)" "$expected" "$actual" "$result"
+
+    # Test policy 3 tailoring download path (empty)
+    expected=""
+    actual="$POLICY_TAILORING_DOWNLOAD_PATH"
+    [ "$actual" = "$expected" ] && result="PASS" || result="FAIL"
+    print_test_result "Policy 3 tailoring download path parsing (empty)" "$expected" "$actual" "$result"
+else
+    echo "✗ Failed to load policy 3 config"
+    exit 1
+fi
+
+echo
 echo "Testing non-existent policy (should fail)..."
 
-# Test non-existent policy 3 (in a subshell to avoid exit)
-export POLICY_ID="3"
+# Test non-existent policy 4 (in a subshell to avoid exit)
+export POLICY_ID="4"
 config_result=0
 (load_config "$TEST_CONFIG" >/dev/null 2>&1) || config_result=$?
 
 if [ $config_result -eq 0 ]; then
-    print_test_result "Non-existent policy 3 handling" "should fail" "passed unexpectedly" "FAIL"
+    print_test_result "Non-existent policy 4 handling" "should fail" "passed unexpectedly" "FAIL"
 else
-    print_test_result "Non-existent policy 3 handling" "should fail" "failed correctly" "PASS"
+    print_test_result "Non-existent policy 4 handling" "should fail" "failed correctly" "PASS"
 fi
 
 echo
